@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>修改页面</title>
+    <link rel="stylesheet" href="./css/bootstrap.css">
+    <script src="./js/Ajax.js"></script>
+    <script>
+
+        window.onload = function () {
+            var inp = document.querySelectorAll('input')
+            var but = document.querySelector('button')
+
+            but.onclick = function () {
+                $Ajax({
+                    method: 'post',
+                    url: '修改程序.php',
+                    date: {
+                        name: inp[0].value,
+                        sex: inp[1].value,
+                        age: inp[2].value,
+                        add: inp[3].value,
+                        lxfs: inp[4].value,
+                        id: inp[5].value
+                    },
+                    success: function (res) {
+                        var obj = JSON.parse(res)
+                        if(obj.code!=0){
+                            alert(obj.mes)
+                        }else{
+                            alert(obj.mes)
+                            location.href="index.html"
+                        }
+                    },
+                    error: function (req) {
+                        alert(req)
+                    }
+                })
+            }
+
+            var id = QuIdZhi();
+            // alert(start)
+            $Ajax({
+                method: 'get',
+                url: '获取要修改的数据.php',
+                date: {
+                    id: id
+                },
+                success: function (res) {
+                    // alert(res)
+                    var obj = JSON.parse(res)
+                    if (obj.code == 0) {
+                        var row = JSON.parse(obj.mes)
+                        // alert(row)
+                        inp[0].value = row.name
+                        inp[1].value = row.sex
+                        inp[2].value = row.age
+                        inp[3].value = row.ad
+                        inp[4].value = row.lxfs
+                        inp[5].value = row.Id
+                    }
+                },
+                error: function (req) {
+
+                }
+
+            })
+
+
+        }
+
+        function QuIdZhi() {
+            var start = location.search.indexOf("id=") + 3;
+            start = location.search.substring(start)
+            return start;
+        }
+
+    </script>
+
+
+</head>
+
+<body style="background:url(./img/图片_658.jpg) ;">
+    <div class="container">
+        <div class="alert alert-primary" style="height: 80px;">
+            <h1>信息修改系统</h1>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label" name="name">姓名：</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" value="">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label" name="sex">性别：</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label" name="age">年龄：</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label" name="add">住址：</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label" name="lxfs">联系方式：</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-sm-10">
+                <input type="hidden" class="form-control">
+            </div>
+        </div>
+
+        <button class="btn-block btn-primary" type="submit" style="height: 50px;">点击确认修改</button>
+        <a href="./index.html" style="text-decoration: none;"><button class="btn-block btn-dark"
+                style="margin-top: 15px; height: 50px;">点击回到首页</button></a>
+    </div>
+
+</body>
+
+
+
+</html>

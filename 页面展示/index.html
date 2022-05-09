@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首页</title>
+    <link rel="stylesheet" href="./css/bootstrap.css">
+    <script src="./js/Ajax.js"></script>
+    <link rel="stylesheet" href="./css/index.css">
+
+    <script>
+        window.onload = function () {
+            var but = document.querySelector('button')
+            var tb = document.querySelector('#tb')
+            // 查询数据库数据并返回到页面
+            but.onclick = function () {
+                $Ajax({
+                    method: 'get',
+                    url: '链接MySQL.php',
+                    success: function (res) {
+                        var arr = JSON.parse(res)
+                        // alert(arr);
+                        var str = '';
+                        for (var i = 0; i < arr.length; i++) {
+                            str += "<tr><th>" + arr[i].Id + "</th>" + "<td>" + arr[i].name + "</td>" + "<td>" + arr[i].sex + "</td>" + "<td>" + arr[i].age + "</td>" + "<td>" + arr[i].ad + "</td>" + "<td>" + arr[i].lxfs + "</td>" + "<td " + "id='" + arr[i].Id + "'>" + "<a href='"+"修改页面.html"+"?id="+arr[i].Id+"'>修改</a>" + "/" + "<a href=''>删除</a>" + "</td>" + "</tr>"
+                        }
+                        tb.innerHTML = str
+                    },
+                    error: function (req) {
+                        alert(req);
+                    }
+
+                })
+            }
+            // 制作删除程序
+            tb.onclick = function (ev) {
+                var e = ev || window.event;
+                var target = e.target || window.event.srcElement;
+                if (target.nodeName.toLowerCase() == "a" && target.innerHTML == "删除" ) {
+                    var id = target.parentNode.id;
+                        $Ajax({
+                            method: "get",
+                            url: "删除操作.php",
+                            date: {
+                                id: id
+                            },
+                            success: function (res) {
+                                var obj = JSON.parse(res);
+                                if (obj.code == 0) {
+                                    tb.removeChild(target.parentNode.parentNode);
+                                    alert('删除成功');
+                                }
+                            },
+                            error: function (req) {
+                                alert(req);
+                            }
+                        })
+                        return false;
+                    }
+                }
+
+            }
+
+        
+    </script>
+
+</head>
+
+<body style="background: url(./img/图片_205.jpg);">
+    <div class="container">
+        <div class="alert alert-primary" style="height: 80px;">
+            <h1>个人信息表</h1>
+        </div>
+
+        <button class="btn-block btn-primary">点击获取个人信息表</button>
+
+        <!-- 跳转到添加页面 -->
+        <a href="./添加.html" style="text-decoration: none;"><button class="btn-block btn-dark"
+                style="margin-top: 15px;">点击添加人员信息</button></a>
+
+        <table class="table table-hover table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">id</th>
+                    <th scope="col">姓名</th>
+                    <th scope="col">性别</th>
+                    <th scope="col">年龄</th>
+                    <th scope="col">住址</th>
+                    <th scope="col">联系方式</th>
+                    <th scope="col" colspan=2>操作</th>
+                </tr>
+            </thead>
+            <tbody id="tb">
+
+            </tbody>
+        </table>
+
+
+    </div>
+</body>
+
+</html>
